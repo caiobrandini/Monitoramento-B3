@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'login/style.css' %}">
+    <link href="http://fonts.googleapis.com/css?family=Oswald:400,300,700" rel='stylesheet' type='text/css'>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div id="main" class="d-flex">
+		<div class="bgimg"><a href="index.php"><img src="{% static 'images/back.svg' %}" alt=""></a></div>
+		<div id="form-container" class="container-fluid">
+			<form id="login" class="pb-md-5" action="/auth/login/" method="post">
+				{% csrf_token %}
+				<div class="form-group">
+					<h2>Faça login para continuar</h2>
+					<label>Nome de usuário</label> 
+					<input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Usuário" name="email">
+				</div>
+				<div class="form-group">
+					<label>Senha</label>
+					<input type="password" class="form-control" placeholder="Senha" name="password"> 
+				</div>
+				<button type="submit" class="btn btn-primary btn-lg btn-block mt-4" style="width: 380px;" name="login">Login</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

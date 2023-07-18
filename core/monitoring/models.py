@@ -1,13 +1,15 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 
 class Stock(models.Model):
-	code = models.CharField(max_length=100, unique=True)
+	name = models.CharField(max_length=100, unique=True)
 
 
 class StockListenerManager(models.QuerySet):
 	def filter_user_objects(self, user):
 		return self.filter(user=user)
+
 
 class StockListener(models.Model):
 	objects = StockListenerManager.as_manager()
@@ -22,12 +24,13 @@ class StockListener(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 
 	class Meta:
-		unique_together = ['user', 'stock']
-	
+		unique_together = ["user", "stock"]
+
+
 class StockRecord(models.Model):
-	datetime =models.DateTimeField()
+	datetime = models.DateTimeField()
 	value = models.DecimalField(max_digits=8, decimal_places=2)
 	stock_listener = models.ForeignKey(StockListener, on_delete=models.CASCADE)
 
 	class Meta:
-		unique_together = ['stock_listener', 'datetime']
+		unique_together = ["stock_listener", "datetime"]

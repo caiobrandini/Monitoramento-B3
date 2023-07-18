@@ -12,7 +12,7 @@ class HomeView(LoginRequiredMixin, View):
 
 		stock_listeners = []
 		for stock_listener in stock_listeners_objects:
-			
+
 			stock_record_objects = stock_listener.stockrecord_set.all()
 
 			graph_values = []
@@ -21,22 +21,17 @@ class HomeView(LoginRequiredMixin, View):
 				formated_datetime = stock_record.datetime.strftime("%d/%m/%y %H:%M")
 				graph_labels.append(formated_datetime)
 				graph_values.append(stock_record.value)
-			
-			stock_listeners.append({
-				'stock_code': stock_listener.stock.code,
-				'frequency': stock_listener.frequency,
-				'upper_tunnel_limit': stock_listener.upper_tunnel_limit,
-				'inferior_tunnel_limit': stock_listener.inferior_tunnel_limit,
-				'graph': {
-					'labels': graph_labels,
-					'values': graph_values
+
+			stock_listeners.append(
+				{
+					"stock_code": stock_listener.stock.code,
+					"frequency": stock_listener.frequency,
+					"upper_tunnel_limit": stock_listener.upper_tunnel_limit,
+					"inferior_tunnel_limit": stock_listener.inferior_tunnel_limit,
+					"graph": {"labels": graph_labels, "values": graph_values},
 				}
-			})
+			)
 
-		context = {
-			'stock_listeners': stock_listeners,
-			'username': self.request.user.username
-		}
-
+		context = {"stock_listeners": stock_listeners, "username": self.request.user.username}
 
 		return render(self.request, "home.html", context)

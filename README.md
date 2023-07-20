@@ -23,6 +23,16 @@ As versões abaixo são **recomendadas**, mas não obrigatórias, provavelmente 
  
 -  **Linux**: Siga as instruções disponíveis [aqui](https://computingforgeeks.com/install-postgresql-11-on-ubuntu-linux/)
 
+### MetaTrader 5
+
+-  Essa versão é **obrigatória**
+ 
+-  O MetaTrader 5 é uma ferramenta gratuita que permite realizar análise de ativos em tempo real
+- Disponível para Windows e Linux [aqui](https://www.metatrader5.com/pt/download)
+- Após a instalação será necessário um login e senha, disponibilizados gratuitamente por diversas corretoras, como Xp e Rico
+	- [Xp](https://atendimento.xpi.com.br/artigo/1476-como-realizar-contratacao-e-instalacao-do-metatrader-5)
+	- [Rico](https://www.rico.com.vc/plataformas/metatrader/)
+
 ## Preparação do ambiente
 
 ### Variáveis de ambiente
@@ -55,3 +65,9 @@ As versões abaixo são **recomendadas**, mas não obrigatórias, provavelmente 
   python manage.py runserver
   ```
   - para acessar a aplicação basta usar o link que aparecerá no seu terminal
+
+- Inicialização dos monitoramentos criados
+  ```
+  # /Monitoramento-B3/core/
+  python manage.py continuously_monitor
+  ```

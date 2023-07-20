@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
-from monitoring.models import StockListener, Stock
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.shortcuts import redirect, render
 from django.views import View
+from monitoring.models import Stock, StockListener
 
 
 class CreateStockListener(LoginRequiredMixin, View):
@@ -15,7 +14,7 @@ class CreateStockListener(LoginRequiredMixin, View):
 		form_errors = []
 
 		try:
-			stock = Stock.objects.get(code=self.request.POST["stock_name"])
+			stock = Stock.objects.get(name=self.request.POST["stock_name"])
 		except ObjectDoesNotExist:
 			form_errors.append("A seleção do ativo possui formatação incorreta")
 
@@ -45,4 +44,13 @@ class CreateStockListener(LoginRequiredMixin, View):
 			inferior_tunnel_limit=inferior_limit,
 		)
 
+		return redirect("home")
+
+
+class DeleteStockListener(LoginRequiredMixin, View):
+	def post(self, *args, **kwargs):
+		stock_listener_id = self.request.POST["stock_listener_id"]
+		StockListener.objects.filter_user_objects(self.request.user).filter(
+			pk=stock_listener_id
+		).delete()
 		return redirect("home")

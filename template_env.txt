@@ -1,0 +1,16 @@
+# Esse é um template para o arquivo .env, responsável por 
+# armazenar as variáveis de ambiente da sua aplicação
+
+# Para utiliza-lo, renomeie o arquivo para ".env" e substituia
+# as strings exemplos abaixo pelas suas informações
+
+# Database Configs
+DATABASE_PORT="5432"
+DATABASE_HOST="localhost"
+DATABASE_PASSWORD="suaSenha"
+DATABASE_USER="seuUsuarioDoBanco"
+
+# Email Configs
+EMAIL_SENDER ="exemplo@gmail.com"
+EMAIL_PASSWORD ="senhaDeAppDoSeuEmail"
+SMTP_SERVER ="smtp.gmail.com"

@@ -15,19 +15,24 @@ class HomeView(LoginRequiredMixin, View):
 
 			stock_record_objects = stock_listener.stockrecord_set.all()
 
+			last_record = stock_record_objects.order_by("-datetime").first()
+			last_value = f"R$ {last_record.value}" if last_record else "Nenhum"
+
 			graph_values = []
 			graph_labels = []
 			for stock_record in stock_record_objects:
 				formated_datetime = stock_record.datetime.strftime("%d/%m/%y %H:%M")
 				graph_labels.append(formated_datetime)
-				graph_values.append(stock_record.value)
+				graph_values.append(str(stock_record.value))
 
 			stock_listeners.append(
 				{
-					"stock_code": stock_listener.stock.code,
+					"stock_listener_id": stock_listener.pk,
+					"stock_name": stock_listener.stock.name,
 					"frequency": stock_listener.frequency,
-					"upper_tunnel_limit": stock_listener.upper_tunnel_limit,
-					"inferior_tunnel_limit": stock_listener.inferior_tunnel_limit,
+					"upper_tunnel_limit": str(stock_listener.upper_tunnel_limit),
+					"inferior_tunnel_limit": str(stock_listener.inferior_tunnel_limit),
+					"last_value": str(last_value),
 					"graph": {"labels": graph_labels, "values": graph_values},
 				}
 			)

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoramento B3</title>
     {% load static %}
+	<link rel="icon" type="image/x-icon" href="{% static 'images/favicon.jpg' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'home/style.css' %}">
     <link href="http://fonts.googleapis.com/css?family=Oswald:400,300,700" rel='stylesheet' type='text/css'>
@@ -29,36 +30,92 @@
 
     <section>
 
-        <h2> Olá, Caio </h2>
+        <h2> Olá, {{username}} </h2>
 
-        <div class="cards-container">
-            
-            <div class="card">
-                <div class="card-header">
-                    Featured
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
+        <div class="cards-container mb-4">
 
-            <div class="card">
-                <div class="card-header">
-                    Featured
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
+            {% for stock_listener in stock_listeners %}
 
+                <div class="card">
+                    <div class="card-header">
+                        {{stock_listener.stock_name}}
+                    </div>
+                    <div class="card-body">
+						<div class="d-flex">
+							<div class="listener-info">
+								<h5 class="card-title">Configurações</h5>
+								<p class="card-text">Frequência de monitoramento: <span class="ml-2 text-bold">{{stock_listener.frequency}} min</p> </span>
+								<p class="card-text">Limíte superior: <span class="ml-2 text-bold">R$ {{stock_listener.upper_tunnel_limit}}</p> </span>
+								<p class="card-text">Limíte inferior: <span class="ml-2 text-bold">R$ {{stock_listener.inferior_tunnel_limit}}</p> </span>
+								<p class="card-text">Limíte inferior: <span class="ml-2 text-bold">{{stock_listener.last_value}}</p> </span>
+							</div>
+							<div class="graph-container">
+								<canvas id="graph-{{stock_listener.stock_listener_id}}" class="graph"></canvas>
+							</div>
+						</div>
+						<div class="delete-listener-container">
+							<form action="monitoring/delete/" method="post"> {% csrf_token %}
+								<input type="hidden" name="stock_listener_id" value="{{stock_listener.stock_listener_id}}">
+								<button class="btn btn-danger" type="submit">Excluir monitoramento</button>
+							</form>
+						</div>
+                    </div>
+                </div>
+
+            {% endfor %}
         </div>
 
     </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.min.js" integrity="sha512-mlz/Fs1VtBou2TrUkGzX4VoGvybkD9nkeXWJm3rle0DPHssYYx4j+8kIS15T78ttGfmOjH0lLaBXGcShaVkdkg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+
+		function randomColorNum() {
+			return Math.floor(Math.random() * 256);
+		}
+			
+		function randomRGBstring() {
+			const red = randomColorNum();
+			const green = randomColorNum();
+			const blue = randomColorNum();
+			return `rgb(${red}, ${green}, ${blue})`;
+		}
+		
+		const graphs_info = {{stock_listeners|safe}}
+		console.log(graphs_info)
+		
+		for(let i=0; i<graphs_info.length; i++){
+			
+			const populationChart = $(`#graph-${graphs_info[i].stock_listener_id}`);
+			const ctx = populationChart[0].getContext("2d");
+
+			const {labels, values} = graphs_info[i].graph
+	
+			new Chart(ctx, {
+				type: 'line',
+				data: {
+					labels: labels,
+					datasets: [{
+						label: 'valor',
+						borderColor: randomRGBstring(),
+						fill: false,
+						data: values
+					}]          
+				},
+				options: {
+					responsive: true,
+					legend: {
+					position: 'top',
+					},
+					title: {
+					display: true,
+					text: 'Histórico de valores monitorados'
+					}
+				}
+			});
+		}
+
+	</script>
 </body>
 </html>

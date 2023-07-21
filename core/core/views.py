@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.views import View
 from monitoring.models import StockListener
+from pytz import timezone
 
 
 class HomeView(LoginRequiredMixin, View):
@@ -21,7 +22,9 @@ class HomeView(LoginRequiredMixin, View):
 			graph_values = []
 			graph_labels = []
 			for stock_record in stock_record_objects:
-				formated_datetime = stock_record.datetime.strftime("%d/%m/%y %H:%M")
+				tz = timezone("America/Sao_Paulo")
+				date_with_tz = stock_record.datetime.astimezone(tz)
+				formated_datetime = date_with_tz.strftime("%d/%m/%y %H:%M")
 				graph_labels.append(formated_datetime)
 				graph_values.append(str(stock_record.value))
 
